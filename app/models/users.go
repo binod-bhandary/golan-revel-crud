@@ -1,11 +1,11 @@
 package models
 
 import (
+	"crud/app"
 	"errors"
 	"fmt"
 	"net/http"
 
-	"../config"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -18,7 +18,7 @@ type User struct {
 }
 
 func AllUsers() ([]User, error) {
-	rows, err := config.DB.Query("SELECT * FROM users")
+	rows, err := app.DB.Query("SELECT * FROM users")
 	if err != nil {
 		return nil, err
 	}
@@ -47,7 +47,7 @@ func OneUser(r *http.Request) (User, error) {
 		return bk, errors.New("400. Bad Request.")
 	}
 
-	row := config.DB.QueryRow("SELECT * FROM user WHERE id = $1", ID)
+	row := app.DB.QueryRow("SELECT * FROM user WHERE id = $1", ID)
 
 	err := row.Scan(&bk.ID, &bk.Fullname, &bk.Email, &bk.Username)
 	if err != nil {
@@ -67,7 +67,7 @@ func LogUser(req *http.Request) (User, error) {
 			return bk, errors.New("400. Bad Request.")
 		}
 
-		row := config.DB.QueryRow("SELECT * FROM users WHERE username = $1", un)
+		row := app.DB.QueryRow("SELECT * FROM users WHERE username = $1", un)
 
 		err := row.Scan(&bk.ID, &bk.Fullname, &bk.Email, &bk.Username, &bk.Password)
 		fmt.Println(bk)
@@ -102,7 +102,7 @@ func PutUser(r *http.Request) (User, error) {
 	bk.Password = string(bs)
 	fmt.Println(bk)
 	// insert values
-	_, err = config.DB.Exec("INSERT INTO users (fullname, email, username, password) VALUES ($1, $2, $3, $4)", bk.Fullname, bk.Email, bk.Username, bk.Password)
+	_, err = app.DB.Exec("INSERT INTO users (fullname, email, username, password) VALUES ($1, $2, $3, $4)", bk.Fullname, bk.Email, bk.Username, bk.Password)
 
 	if err != nil {
 		return bk, errors.New("500. Internal Server Error." + err.Error())
@@ -133,7 +133,7 @@ func UpdateUser(r *http.Request) (User, error) {
 	bk.Password = string(bs)
 
 	// insert values
-	_, err = config.DB.Exec("UPDATE users SET fullname = $2, email=$3, username=$4, password=$5 WHERE id=$1;", id, bk.Fullname, bk.Email, bk.Username, bk.Password)
+	_, err = app.DB.Exec("UPDATE users SET fullname = $2, email=$3, username=$4, password=$5 WHERE id=$1;", id, bk.Fullname, bk.Email, bk.Username, bk.Password)
 	if err != nil {
 		return bk, err
 	}
@@ -146,7 +146,7 @@ func DeleteUser(r *http.Request) error {
 		return errors.New("400. Bad Request")
 	}
 
-	_, err := config.DB.Exec("DELETE FROM users WHERE id=$1;", ID)
+	_, err := app.DB.Exec("DELETE FROM users WHERE id=$1;", ID)
 	if err != nil {
 		return errors.New("500. Internal Server Error")
 	}

@@ -1,6 +1,10 @@
 package controllers
 
 import (
+	"crud/app/models"
+	"crud/app/routes"
+	"fmt"
+
 	"github.com/revel/revel"
 )
 
@@ -10,7 +14,11 @@ type App struct {
 
 func (c App) Index() revel.Result {
 
-	bks, err := AllBooks()
-	greeting := "Aloha World"
-	return c.Render(greeting)
+	bks, err := models.AllBooks()
+	fmt.Println(bks)
+	if err != nil {
+		c.Flash.Error("Please log in first")
+		return c.Redirect(routes.App.Index())
+	}
+	return c.Render(bks)
 }

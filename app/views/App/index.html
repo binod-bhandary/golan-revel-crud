@@ -26,7 +26,7 @@
                 
         </thead>
         <tbody id="form-list-client-body">
-        {{range .}}
+        {{range .bks}}
             <tr>
                 <td>{{.Isbn}}</td>
                 <td><a href="/books/show?isbn={{.Isbn}}">{{.Title}} </a></td>
