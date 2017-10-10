@@ -7,7 +7,11 @@ module:testrunner
 # module:jobs
 
 
+
 GET     /                                       App.Index
+GET     /login                                  App.Login
+POST    /login                                  App.LoginProcess
+GET     /logout                                 App.Logout
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -17,3 +21,13 @@ GET     /public/*filepath                       Static.Serve("public")
 
 # Catch all
 *       /:controller/:action                    :controller.:action
+
+#books routes
+GET  /books                          Books.Index
+GET  /books/show/:id                 Books.Show
+GET  /books/create                   Books.Create
+POST /books/create/process           Books.CreateProcess
+GET  /books/:id/update               Books.Update
+POST /books/:id/update/process       Books.UpdateProcess
+GET  /books/:id/delete               Books.Delete
+

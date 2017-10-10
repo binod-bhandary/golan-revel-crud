@@ -1,0 +1,50 @@
+{{set . "title" "List Books"}}
+{{template "header" .}}
+<div class="container-fluid">
+    <div class="row">
+        {{template "sidebar" .}}
+       
+        <div class="col-sm-9">
+
+            
+            {{template "flash" .}}
+    <form id="form-list-client">
+            <legend>List of Books</legend>
+    
+    <div class="pull-right">
+     <a class="btn btn-default-btn-xs btn-success" href="/books/create"><i class="glyphicon glyphicon-plus"></i> New</a>
+    </div>
+    <table class="table table-bordered table-condensed table-hover">
+        <thead>
+            <tr>
+                <td>Id</td>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Price</th>
+                <th>Action</th>
+            </tr>
+                
+        </thead>
+        <tbody id="form-list-client-body">
+        {{range .Books}}
+            <tr>
+                <td>{{.Isbn}}</td>
+                <td><a href="{{url "Books.Show" .Isbn}}">{{.Title}} </a></td>
+                <td>{{.Author}}</td>
+                <td>${{.Price}}</td>
+                <td>
+                    <a title="view this book" class="btn btn-default btn-sm " href="{{url "Books.Show" .Isbn}}"> <i class="glyphicon glyphicon-eye-open text-primary"></i> </a>
+                    <a title="edit this book" class="btn btn-default btn-sm " href="{{url "Books.Update" .Isbn}}"> <i class="glyphicon glyphicon-edit text-primary"></i> </a>
+                    <a title="delete this book" class="btn btn-default btn-sm " href="{{url "Books.Delete" .Isbn}}"> <i class="glyphicon glyphicon-trash text-danger"></i> </a>
+                </td>
+            </tr>
+            {{end}}
+        </tbody>
+    </table>
+    </form>
+
+        </div>
+        <!--/col-span-9-->
+    </div>
+</div>
+{{template "footer" .}}

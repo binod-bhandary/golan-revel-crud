@@ -39,6 +39,21 @@ func AllUsers() ([]User, error) {
 	return bks, nil
 }
 
+func GetUser(username string) (User, error) {
+
+	fmt.Println(username)
+	bk := User{}
+	row := app.DB.QueryRow("SELECT * FROM users WHERE username = $1 OR email = $1", username)
+	err := row.Scan(&bk.ID, &bk.Fullname, &bk.Email, &bk.Username, &bk.Password)
+	fmt.Println(err)
+	fmt.Println(bk)
+	if err != nil {
+		return bk, err
+	}
+
+	return bk, nil
+}
+
 func OneUser(r *http.Request) (User, error) {
 
 	bk := User{}
@@ -47,9 +62,9 @@ func OneUser(r *http.Request) (User, error) {
 		return bk, errors.New("400. Bad Request.")
 	}
 
-	row := app.DB.QueryRow("SELECT * FROM user WHERE id = $1", ID)
-
-	err := row.Scan(&bk.ID, &bk.Fullname, &bk.Email, &bk.Username)
+	row := app.DB.QueryRow("SELECT * FROM users WHERE id = $1", ID)
+	err := row.Scan(&bk.ID, &bk.Fullname, &bk.Email, &bk.Username, &bk.Password)
+	fmt.Println(bk)
 	if err != nil {
 		return bk, err
 	}

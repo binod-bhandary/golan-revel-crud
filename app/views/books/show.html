@@ -1,0 +1,40 @@
+{{set . "title" .title}}
+{{template "header" .}}
+<div class="container-fluid">
+    <div class="row">
+        {{template "sidebar" .}}
+       
+        <div class="col-sm-9">
+
+            <div class="pull-right">
+                <a class="btn btn-default-btn-xs btn-success" href="{{url "Books.Index"}}"><i class="glyphicon glyphicon-list"></i> View Books</a>
+               </div>
+    
+            <table class="table table-user-information">
+                {{with .book}}
+                <tbody>
+                  <tr>
+                    <td>Id:</td>
+                    <td>{{.Isbn}}</td>
+                  </tr>
+                  <tr>
+                    <td>Title</td>
+                    <td>{{.Title}}</td>
+                  </tr>
+                  <tr>
+                    <td>Author</td>
+                    <td>{{.Author}}</td>
+                  </tr>
+                  <tr>
+                    <td>Price</td>
+                    <td>{{.Price}}</td>
+                  </tr>
+                </tbody>
+                {{end}}
+              </table>
+
+        </div>
+        <!--/col-span-9-->
+    </div>
+</div>
+{{template "footer" .}}

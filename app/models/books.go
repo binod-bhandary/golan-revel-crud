@@ -2,9 +2,9 @@ package models
 
 import (
 	"crud/app"
-	"errors"
-	"net/http"
-	"strconv"
+	"fmt"
+
+	"github.com/revel/revel"
 )
 
 type Book struct {
@@ -12,6 +12,25 @@ type Book struct {
 	Title  string
 	Author string
 	Price  float32
+}
+
+// TODO: Make an interface for Validate() and then validation can pass in the
+// key prefix ("booking.")
+func (book *Book) Validate(v *revel.Validation) {
+
+	v.Required(book.Isbn).Message("ID should be unique!")
+	v.Required(book.Title).Message("Insert book title")
+	v.Required(book.Author).Message("Insert book author name")
+	v.Required(book.Price).Message("Insert price name")
+
+	// v.Match(book.Price, regexp.MustCompile(`^\d+(,\d{1,2})?$`)).
+	// 	Message("Credit card number must be numeric and 16 digits")
+
+	// v.Check(book.Title,
+	// 	revel.Required{},
+	// 	revel.MinSize{3},
+	// 	revel.MaxSize{70},
+	// )
 }
 
 func AllBooks() ([]Book, error) {
@@ -37,12 +56,9 @@ func AllBooks() ([]Book, error) {
 	return bks, nil
 }
 
-func OneBook(r *http.Request) (Book, error) {
+func OneBook(id int) (Book, error) {
 	bk := Book{}
-	isbn := r.FormValue("isbn")
-	if isbn == "" {
-		return bk, errors.New("400. Bad Request.")
-	}
+	isbn := id
 
 	row := app.DB.QueryRow("SELECT * FROM books WHERE isbn = $1", isbn)
 
@@ -54,70 +70,19 @@ func OneBook(r *http.Request) (Book, error) {
 	return bk, nil
 }
 
-func PutBook(r *http.Request) (Book, error) {
-	// get form values
-	bk := Book{}
-	bk.Isbn = r.FormValue("isbn")
-	bk.Title = r.FormValue("title")
-	bk.Author = r.FormValue("author")
-	p := r.FormValue("price")
-
-	// validate form values
-	if bk.Isbn == "" || bk.Title == "" || bk.Author == "" || p == "" {
-		return bk, errors.New("400. Bad request. All fields must be complete.")
-	}
-
-	// convert form values
-	f64, err := strconv.ParseFloat(p, 32)
-	if err != nil {
-		return bk, errors.New("406. Not Acceptable. Price must be a number.")
-	}
-	bk.Price = float32(f64)
-
+func (book *Book) PutBook(v *revel.Request) {
+	fmt.Println(book.Isbn)
 	// insert values
-	_, err = app.DB.Exec("INSERT INTO books (isbn, title, author, price) VALUES ($1, $2, $3, $4)", bk.Isbn, bk.Title, bk.Author, bk.Price)
-	if err != nil {
-		return bk, errors.New("500. Internal Server Error." + err.Error())
-	}
-	return bk, nil
+	app.DB.Exec("INSERT INTO books (isbn, title, author, price) VALUES ($1, $2, $3, $4)", book.Isbn, book.Title, book.Author, book.Price)
 }
 
-func UpdateBook(r *http.Request) (Book, error) {
-	// get form values
-	bk := Book{}
-	bk.Isbn = r.FormValue("isbn")
-	bk.Title = r.FormValue("title")
-	bk.Author = r.FormValue("author")
-	p := r.FormValue("price")
-
-	if bk.Isbn == "" || bk.Title == "" || bk.Author == "" || p == "" {
-		return bk, errors.New("400. Bad Request. Fields can't be empty.")
-	}
-
-	// convert form values
-	f64, err := strconv.ParseFloat(p, 32)
-	if err != nil {
-		return bk, errors.New("406. Not Acceptable. Enter number for price.")
-	}
-	bk.Price = float32(f64)
-
+func (book *Book) UpdateBook(v *revel.Request) {
 	// insert values
-	_, err = app.DB.Exec("UPDATE books SET isbn = $1, title=$2, author=$3, price=$4 WHERE isbn=$1;", bk.Isbn, bk.Title, bk.Author, bk.Price)
-	if err != nil {
-		return bk, err
-	}
-	return bk, nil
+	app.DB.Exec("UPDATE books SET isbn = $1, title=$2, author=$3, price=$4 WHERE isbn=$1;", book.Isbn, book.Title, book.Author, book.Price)
+
 }
 
-func DeleteBook(r *http.Request) error {
-	isbn := r.FormValue("isbn")
-	if isbn == "" {
-		return errors.New("400. Bad Request.")
-	}
-
-	_, err := app.DB.Exec("DELETE FROM books WHERE isbn=$1;", isbn)
-	if err != nil {
-		return errors.New("500. Internal Server Error")
-	}
-	return nil
+func (book Book) DeleteBook(id int) {
+	fmt.Println(id)
+	app.DB.Exec("DELETE FROM books WHERE isbn=$1;", id)
 }

@@ -1,0 +1,68 @@
+{{set . "title" .title }}
+{{template "header" .}}
+<div class="container-fluid">
+    <div class="row">
+        {{template "sidebar" .}}
+       
+        <div class="col-sm-9">
+
+            <div class="pull-right">
+                <a class="btn btn-default-btn-xs btn-success" href="{{url "Books.Index"}}"><i class="glyphicon glyphicon-list"></i> View Books</a>
+               </div>
+    
+               <form class="form-horizontal" id="form-edit-client" method="post" action="{{url "Books.UpdateProcess" .id}}">
+                <fieldset>
+                {{template "flash" .}}
+                <!-- Form Name -->
+                <legend>Edit {{.Title}} Book</legend>
+                {{with .book}}
+                <!-- Text input-->
+                <input id="id" name="book.Isbn" type="hidden"   value="{{.Isbn}}">               
+                
+                            
+
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="client-name">Title</label>  
+                <div class="col-md-4">
+                <input id="title" name="book.Title" type="text" placeholder="your book's name" class="form-control input-md" required value="{{.Title}}">
+                <span class="help-block">Full name of your book</span>  
+                </div>
+              </div>
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="client-name">Author</label>  
+                <div class="col-md-4">
+                <input id="author" name="book.Author" type="text" placeholder="your author's name" class="form-control input-md"  required value="{{.Author}}">
+                <span class="help-block">Full name of your author</span>  
+                </div>
+              </div>
+              <!-- Text input-->
+              <div class="form-group">
+                <label class="col-md-4 control-label" for="client-name">Price</label>  
+                <div class="col-md-4">
+                <input id="price" name="book.Price" type="text" placeholder="your price's name" class="form-control input-md" required value="{{.Price}}">
+                <span class="help-block">Price</span>  
+                </div>
+              </div>
+                
+
+                {{end}}
+                <!-- Button -->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="btn-save"></label>
+                  <div class="col-md-4">
+                    <button id="btn-save" name="btn-save" class="btn btn-success">Update</button>
+                     <a class="btn btn-danger" href="{{url "Books.Index"}}">Cancel</a>
+                    
+                  </div>
+                </div>
+                
+                </fieldset>
+                </form>
+
+        </div>
+        <!--/col-span-9-->
+    </div>
+</div>
+{{template "footer" .}}

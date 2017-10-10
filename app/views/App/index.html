@@ -6,42 +6,9 @@
        
         <div class="col-sm-9">
 
-            
-    
-    <form id="form-list-client">
-            <legend>List of Books</legend>
-    
-    <div class="pull-right">
-     <a class="btn btn-default-btn-xs btn-success" href="/books/create"><i class="glyphicon glyphicon-plus"></i> New</a>
-    </div>
-    <table class="table table-bordered table-condensed table-hover">
-        <thead>
-            <tr>
-                <td>Id</td>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Price</th>
-                <th>Action</th>
-            </tr>
-                
-        </thead>
-        <tbody id="form-list-client-body">
-        {{range .bks}}
-            <tr>
-                <td>{{.Isbn}}</td>
-                <td><a href="/books/show?isbn={{.Isbn}}">{{.Title}} </a></td>
-                <td>{{.Author}}</td>
-                <td>${{.Price}}</td>
-                <td>
-                    <a title="view this book" class="btn btn-default btn-sm " href="/books/show?isbn={{.Isbn}}"> <i class="glyphicon glyphicon-eye-open text-primary"></i> </a>
-                    <a title="edit this book" class="btn btn-default btn-sm " href="/books/update?isbn={{.Isbn}}"> <i class="glyphicon glyphicon-edit text-primary"></i> </a>
-                    <a title="delete this book" class="btn btn-default btn-sm " href="/books/delete/process?isbn={{.Isbn}}"> <i class="glyphicon glyphicon-trash text-danger"></i> </a>
-                </td>
-            </tr>
+            {{if .user}}
+            <h1>Hello, {{.user.Username}}</h1>
             {{end}}
-        </tbody>
-    </table>
-    </form>
 
         </div>
         <!--/col-span-9-->

@@ -3,7 +3,7 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>List Books</title>    
+<title>{{.title}}</title>   
 	    
 <link href="http://fontawesome.io/assets/font-awesome/css/font-awesome.css" rel="stylesheet" media="screen">
 <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" type="text/css" rel="stylesheet">
@@ -23,14 +23,16 @@
         <div class="navbar-collapse collapse">
          
             <ul class="nav navbar-nav navbar-right">
-             {{if .Email}}
+            {{if .user}}
             <li class="dropdown">
-                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-user"></i> Admin <span class="caret"></span></a>
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-user"></i> Connected as {{.user.Username}} <span class="caret"></span></a>
                     <ul id="g-account-menu" class="dropdown-menu" role="menu">
                         <li><a href="#">My Profile</a></li>
                     </ul>
                 </li>
-                <li><a href="#"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+                <li><a href="{{url "Books.Index"}}"><i class="glyphicon glyphicon-lock"></i> Books</a></li>
+                <li><a href="{{url "App.Logout"}}"><i class="glyphicon glyphicon-lock"></i> Logout</a></li>
+        
             {{else}}
             <li><a href="/login"><i class="glyphicon glyphicon-lock"></i> Login</a></li>
             <li><a href="/register"><i class="glyphicon glyphicon-lock"></i> Register</a></li>            
