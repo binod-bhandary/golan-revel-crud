@@ -1,0 +1,79 @@
+{{set . "title" "create Book"}}
+{{template "header" .}}
+<div class="container-fluid">
+    <div class="row">
+        {{template "sidebar" .}}
+       
+        <div class="col-sm-9">
+
+            <div class="pull-right">
+                <a class="btn btn-default-btn-xs btn-success" href="{{url "Books.Index"}}"><i class="glyphicon glyphicon-list"></i> View Books</a>
+               </div>
+               <form class="form-horizontal" id="form-edit-client" method="post" action="{{url "Books.CreateProcess"}}">
+                <fieldset>
+
+                    {{template "flash" .}}
+                <!-- Form Name -->
+                <legend>Create Book</legend>
+                
+                <!-- Text input-->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="client-name">ID</label>  
+                  <div class="col-md-4">
+                  {{with $field := field "book.Isbn" .}}
+                  <input id="id" name="book.Isbn" value="{{$field.Flash}}" type="text" placeholder="ID number" class="form-control input-md"  autofocus>
+                  {{end}}
+                  <span class="help-block">Id must unique</span>  
+                  </div>
+                </div>
+                
+                <!-- Text input-->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="client-name">Title</label>  
+                  <div class="col-md-4">
+                  {{with $field := field "book.Title" .}}
+                  <input id="title" name="book.Title" type="text" value="{{$field.Flash}}" placeholder="your book's name" class="form-control input-md" >
+                  {{end}}
+                  <span class="help-block">Full name of  book</span>  
+                  </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="client-name">Author</label>  
+                  <div class="col-md-4">
+                  {{with $field := field "book.Author" .}}
+                  <input id="author" name="book.Author"  value="{{$field.Flash}}"  type="text" placeholder="book author's name" class="form-control input-md"  >
+                 {{end}}
+                  <span class="help-block">Full name of book author</span>  
+                  </div>
+                </div>
+                <!-- Text input-->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="client-name">Price</label>  
+                  <div class="col-md-4">
+                      {{with $field := field "book.Price" .}}
+                  <input id="price" name="book.Price"  value="{{$field.Flash}}"  type="text" placeholder="book price's name" class="form-control input-md" >
+                  <span class="help-block">Price</span>  
+                  {{end}}
+                  </div>
+                </div>
+                
+                
+                <!-- Button -->
+                <div class="form-group">
+                  <label class="col-md-4 control-label" for="btn-save"></label>
+                  <div class="col-md-4">
+                    <button id="btn-save" name="btn-save" class="btn btn-success">Save</button>
+                     <a class="btn btn-danger" href="{{url "Books.Index"}}">Cancel</a>
+                    
+                  </div>
+                </div>
+                
+                </fieldset>
+                </form>
+
+        </div>
+        <!--/col-span-9-->
+    </div>
+</div>
+{{template "footer" .}}

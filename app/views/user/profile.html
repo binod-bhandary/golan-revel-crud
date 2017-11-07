@@ -1,0 +1,43 @@
+{{set . "title" .title }}
+{{template "header" .}}
+<div class="container-fluid">
+    <div class="row">
+        {{template "sidebar" .}}
+       
+        <div class="col-sm-9">
+           {{template "flash" .}}
+            <div class="pull-right">
+                <a class="btn btn-default-btn-xs btn-primary" href="{{url "App.Index"}}"><i class="glyphicon glyphicon-backward"></i> Go Back</a>
+               
+              </div>
+           {{with .user}}
+            <h3>Hello, {{ .Fullname}}</h3>
+            <table class="table table-user-information mt-5">
+        
+                <tbody>
+                  <tr>
+                    <td>UserName:</td>
+                    <td>{{.Username}}</td>
+                  </tr>
+                  <tr>
+                    <td>Full Name</td>
+                    <td>{{.Fullname}}</td>
+                  </tr>
+                  <tr>
+                    <td>Email</td>
+                    <td>{{.Email}}</td>
+                  </tr>
+                  <tr>
+                    <td>Password</td>
+                    <td><a class="btn btn-default-btn-xs btn-success" href="{{url "User.ChangePassword"}}">
+                      <i class="glyphicon glyphicon-lock"></i> Change Password</a></td>
+                  </tr>
+                </tbody>
+                {{end}}
+              </table>
+
+        </div>
+        <!--/col-span-9-->
+    </div>
+</div>
+{{template "footer" .}}
