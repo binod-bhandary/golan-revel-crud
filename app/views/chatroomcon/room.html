@@ -22,11 +22,22 @@
               <script type="text/html" id="message_tmpl">
                
                           {{raw "<%"}} if(event.Type == 'message') { %>
-                            <li class="message <%= event.User == '{{.user}}' ? '' : 'text-info' %>">
-                              <strong class="primary-font">{{raw "<%"}}= event.User == '{{.user}}' ? 'you' : event.User %></strong>
+                      <li class="<%= event.User == '{{.user}}' ? 'right' : 'left bg-info' %> clearfix" >
+                        <!-- <span class="chat-img <%= event.User == '{{.user}}' ? 'pull-right' : 'pull-left' %> ">
+                <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
+               </span> -->
+                     <div class="chat-body clearfix">
+                        <div class="header">                         
+                            <strong class="<%= event.User == '{{.user}}' ? 'pull-right text-primary' : 'pull-left' %> primary-font">{{raw "<%"}}= event.User == '{{.user}}' ? 'You' : event.User %> </strong>:
+                            
+                          </div>
                               <p>
                                 {{raw "<%"}}= event.Text %>
                               </p>
+                            <small class="text-muted pull-right">
+                            <span class="glyphicon glyphicon-time "></span>13 mins ago
+                          </small>
+                          </div>
                             </li>
                           {{raw "<%"}} } %>
                           {{raw "<%"}} if(event.Type == 'join') { %>
@@ -129,9 +140,9 @@
   var display = function (event) {
 
     $('#thread').append(tmpl('message_tmpl', { event: event }));
-      // $('#thread').scrollTo('max')
-       $("#thread").scrollTop($("#thread").prop("scrollHeight"));
-      // $('#messages').append($('<li>').text(event.User));
+    // $('#thread').scrollTo('max')
+    $("#thread").scrollTop($("#thread").prop("scrollHeight"));
+    // $('#messages').append($('<li>').text(event.User));
   }
 
   // Message received on the socket
