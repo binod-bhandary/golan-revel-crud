@@ -232,11 +232,25 @@ func (c App) Logout() revel.Result {
 func init() {
 
 }
+func (c App) EnterDemo(user, demo string) revel.Result {
 
-func (c App) connected() *models.User {
+	user = c.Session["user"]
 
-	user := c.ViewArgs["user"].(*models.User)
-	revel.INFO.Println(user)
-	return user
+	c.Validation.Required(user)
+	c.Validation.Required(demo)
 
+	if c.Validation.HasErrors() {
+		c.Flash.Error("Please choose a nick name and the demonstration type.")
+		return c.Redirect(App.Index)
+	}
+
+	switch demo {
+	case "refresh":
+		return c.Redirect("/refresh?user=%s", user)
+	case "longpolling":
+		return c.Redirect("/longpolling/room?user=%s", user)
+	case "websocket":
+		return c.Redirect("/websocket/room?user=%s", user)
+	}
+	return nil
 }

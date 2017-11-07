@@ -14,6 +14,7 @@ GET     /fbauthlogin                            App.FBAuthLogin
 GET     /googleauthlogin                        App.GOOGLEAuthLogin
 POST    /login                                  App.LoginProcess
 GET     /logout                                 App.Logout
+GET     /chatdemo                               App.EnterDemo
 
 # Ignore favicon requests
 GET     /favicon.ico                            404
@@ -37,4 +38,9 @@ GET  /books/:id/delete               Books.Delete
 GET  /profile                        User.Profile
 GET  /changepassword                 User.ChangePassword
 POST /updatepassword                 User.UpdatePassword
+
+
+# WebSocket demo
+GET     /chatroom                               Chatroomcon.Room
+WS      /websocket/room/socket                  Chatroomcon.RoomSocket
 

@@ -13,7 +13,30 @@
             <h3>You're {{.me.name}} on Facebook</h3>
             <img src="" />            
             {{end}}
-
+        <div id="signin">
+       <form action="{{.chatdemo}}">
+        {{if .flash.error}}
+        <p class="error">
+            {{.flash.error}}
+        </p>
+        {{end}}
+        <p>
+            <label for="nick">Choose a nick name</label>
+            <input type="text" name="user" id="user">
+        </p>
+        <p>
+            <label for="nick">Demonstration</label>
+            <select name="demo">
+                <option></option>
+                <option value="websocket">WebSocket</option>
+            </select>
+        </p>
+        <p>
+            <label></label>
+            <input type="submit" id="enter" value="Enter the chat room">
+        </p>
+    </form>
+</div>
         </div>
         <!--/col-span-9-->
     </div>

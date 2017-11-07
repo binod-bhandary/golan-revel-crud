@@ -2,8 +2,6 @@
     {{template "debug.html" .}}
   {{end}}
   {{define "footer"}}
-  <script type='text/javascript' src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js">
-  </script>
   <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js" type="text/javascript">
   </script>
   <!-- JavaScript jQuery code from Bootply.com editor  -->
@@ -13,16 +11,8 @@
               $('#openBtn').click(function(){
     $('#myModal').modal({show:true})
   });
-  $('.typeahead').typeahead({
-    source: function (typeahead, query) {
-     /* put your ajax call here..
-     return $.get('/typeahead', { query: query }, function (data) {
-        return typeahead.process(data);
-     });
-     */
-     return ['alpha','beta','bravo','delta','epsilon','gamma','zulu'];
-    }
-  });    });
+
+});
           
   $(".alert").addClass("in").fadeOut(4500);
   
@@ -32,5 +22,6 @@
       $(this).find("i").toggleClass("glyphicon-chevron-right glyphicon-chevron-down");
   });
   </script>
+
   {{end}}
   
