@@ -1,4 +1,5 @@
 {{define "sidebar"}}
+ {{if .session.user}}
 <div class="col-sm-3">
             <!-- Left column -->
             <a href="#"><strong><i class="glyphicon glyphicon-list"></i> Sidebar</strong></a>
@@ -43,4 +44,5 @@
             <hr>           
         </div>
          <!-- /col-3 -->
+{{end}}
 {{end}}

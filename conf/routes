@@ -10,6 +10,8 @@ module:testrunner
 
 GET     /                                       App.Index
 GET     /login                                  App.Login
+GET     /fbauthlogin                            App.FBAuthLogin
+GET     /googleauthlogin                        App.GOOGLEAuthLogin
 POST    /login                                  App.LoginProcess
 GET     /logout                                 App.Logout
 
@@ -30,4 +32,9 @@ POST /books/create/process           Books.CreateProcess
 GET  /books/:id/update               Books.Update
 POST /books/:id/update/process       Books.UpdateProcess
 GET  /books/:id/delete               Books.Delete
+
+#user routes
+GET  /profile                        User.Profile
+GET  /changepassword                 User.ChangePassword
+POST /updatepassword                 User.UpdatePassword
 

@@ -39,6 +39,7 @@ func (c Books) Show(id int) revel.Result {
 	return c.Render(title, book)
 
 }
+
 func (c Books) Create() revel.Result {
 
 	title := "create"

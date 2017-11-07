@@ -6,15 +6,43 @@ import (
 	"fmt"
 	"net/http"
 
+	"github.com/revel/revel"
 	"golang.org/x/crypto/bcrypt"
 )
 
+var db = make(map[int]*User)
+
 type User struct {
-	ID       int
-	Fullname string
-	Email    string
-	Username string
-	Password string
+	ID              int
+	Fullname        string
+	Email           string
+	Username        string
+	Password        string
+	PasswordConfirm string
+	AccessToken     string
+}
+
+type FBUser struct {
+	Name     string `json:"name"`
+	ID       string `json:"id"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+type GOOGLEUser struct {
+	Name     string `json:"name"`
+	ID       string `json:"sub"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// TODO: Make an interface for Validate() and then validation can pass in the
+// key prefix ("booking.")
+func (user *User) PassValidate(v *revel.Validation) {
+	v.Required(user.Password).Message("Password field required.")
+	v.MinSize(user.Password, 6)
+	v.Required(user.PasswordConfirm).Message("Re-Password field required.")
+	v.Required(user.PasswordConfirm == user.Password).Message("The passwords do not match.")
 }
 
 func AllUsers() ([]User, error) {
@@ -62,6 +90,19 @@ func OneUser(r *http.Request) (User, error) {
 		return bk, errors.New("400. Bad Request.")
 	}
 
+	row := app.DB.QueryRow("SELECT * FROM users WHERE id = $1", ID)
+	err := row.Scan(&bk.ID, &bk.Fullname, &bk.Email, &bk.Username, &bk.Password)
+	fmt.Println(bk)
+	if err != nil {
+		return bk, err
+	}
+
+	return bk, nil
+}
+
+func GetUserDetail(ID int) (User, error) {
+
+	bk := User{}
 	row := app.DB.QueryRow("SELECT * FROM users WHERE id = $1", ID)
 	err := row.Scan(&bk.ID, &bk.Fullname, &bk.Email, &bk.Username, &bk.Password)
 	fmt.Println(bk)
@@ -155,6 +196,33 @@ func UpdateUser(r *http.Request) (User, error) {
 	return bk, nil
 }
 
+func UpdatePass(r *http.Request) (User, error) {
+	// get form values
+	bk := User{}
+	p := r.FormValue("password")
+	id := r.FormValue("id")
+
+	// validate form values
+	if p == "" {
+		return bk, errors.New("400. Bad request. All fields must be complete")
+	}
+
+	// convert form values
+	bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	bk.Password = string(bs)
+
+	// insert values
+	_, err = app.DB.Exec("UPDATE users SET  password=$2 WHERE id=$1;", id, bk.Password)
+	if err != nil {
+		return bk, err
+	}
+	return bk, nil
+}
+
 func DeleteUser(r *http.Request) error {
 	ID := r.FormValue("id")
 	if ID == "" {
@@ -166,4 +234,66 @@ func DeleteUser(r *http.Request) error {
 		return errors.New("500. Internal Server Error")
 	}
 	return nil
+}
+
+func PutFBUser(fb FBUser) (User, error) {
+
+	// get form values
+	user := User{}
+	user.Fullname = fb.Name
+	user.Email = fb.Email
+	user.Username = fb.ID
+
+	// validate form values
+	if user.Username == "" || user.Fullname == "" {
+		return user, errors.New("400. Bad request. All fields must be complete")
+	}
+	p := "password"
+
+	// convert form values
+	bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	user.Password = string(bs)
+	fmt.Println(user)
+	// insert values
+	_, err = app.DB.Exec("INSERT INTO users (fullname, email, username, password) VALUES ($1, $2, $3, $4)", user.Fullname, user.Email, user.Username, user.Password)
+
+	if err != nil {
+		return user, errors.New("500. Internal Server Error." + err.Error())
+	}
+	return user, nil
+}
+
+func PutGOOGLEUser(gg GOOGLEUser) (User, error) {
+
+	// get form values
+	user := User{}
+	user.Fullname = gg.Name
+	user.Email = gg.Email
+	user.Username = gg.ID
+
+	// validate form values
+	if user.Username == "" || user.Fullname == "" {
+		return user, errors.New("400. Bad request. All fields must be complete")
+	}
+	p := "password"
+
+	// convert form values
+	bs, err := bcrypt.GenerateFromPassword([]byte(p), bcrypt.MinCost)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	user.Password = string(bs)
+	fmt.Println(user)
+	// insert values
+	_, err = app.DB.Exec("INSERT INTO users (fullname, email, username, password) VALUES ($1, $2, $3, $4)", user.Fullname, user.Email, user.Username, user.Password)
+
+	if err != nil {
+		return user, errors.New("500. Internal Server Error." + err.Error())
+	}
+	return user, nil
 }

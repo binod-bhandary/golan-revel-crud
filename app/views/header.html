@@ -23,11 +23,11 @@
         <div class="navbar-collapse collapse">
          
             <ul class="nav navbar-nav navbar-right">
-            {{if .user}}
+             {{if .session.user}}
             <li class="dropdown">
-                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-user"></i> Connected as {{.user.Username}} <span class="caret"></span></a>
+                    <a class="dropdown-toggle" role="button" data-toggle="dropdown" href="#"><i class="glyphicon glyphicon-user"></i> Connected as {{.session.user}} <span class="caret"></span></a>
                     <ul id="g-account-menu" class="dropdown-menu" role="menu">
-                        <li><a href="#">My Profile</a></li>
+                        <li><a href="{{url "User.Profile"}}">My Profile</a></li>
                     </ul>
                 </li>
                 <li><a href="{{url "Books.Index"}}"><i class="glyphicon glyphicon-lock"></i> Books</a></li>
