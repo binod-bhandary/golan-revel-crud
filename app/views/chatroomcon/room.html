@@ -1,30 +1,29 @@
-{{set . "title" "Chat room"}} 
-{{template "header" .}}
+{{set . "title" "Chat room"}} {{template "header" .}}
 
 <div class="container-fluid">
   <div class="row">
     {{template "sidebar" .}}
 
     <div class="col-sm-9">
-     
+
       <div class="panel panel-primary">
         <div class="panel-heading">
           <span class="glyphicon glyphicon-comment"></span> Hey, {{.user}}
           <div class="btn-group pull-right">
-          <a class="btn btn-default btn-xs" href="/">
-            <i class="glyphicon glyphicon-list"></i>Leave the chat room</a>
-            
+            <a class="btn btn-default btn-xs" href="/">
+              <i class="glyphicon glyphicon-list"></i>Leave the chat room</a>
+
           </div>
         </div>
         <div class="panel-body">
-          
+
           <ul class="chat">
             <div id="thread">
               <script type="text/html" id="message_tmpl">
                
                           {{raw "<%"}} if(event.Type == 'message') { %>
-                            <li class="message <%= event.User == '{{.user}}' ? 'you' : '' %>">
-                              <strong class="primary-font">{{raw "<%"}}= event.User %></strong>
+                            <li class="message <%= event.User == '{{.user}}' ? '' : 'text-info' %>">
+                              <strong class="primary-font">{{raw "<%"}}= event.User == '{{.user}}' ? 'you' : event.User %></strong>
                               <p>
                                 {{raw "<%"}}= event.Text %>
                               </p>
@@ -32,17 +31,15 @@
                           {{raw "<%"}} } %>
                           {{raw "<%"}} if(event.Type == 'join') { %>
                             <li class="message notice">
-                              <h2></h2>
-                              <p>
-                               <strong class="primary-font">{{raw "<%"}}= event.User %></strong> joined the room
+                              <p class="text-success">
+                               <small class="primary-font ">{{raw "<%"}}= event.User %></small> joined the room
                               </p>
                             </li>
                           {{raw "<%"}} } %>
                           {{raw "<%"}} if(event.Type == 'leave') { %>
                             <li class="message notice">
-                              <h2></h2>
-                              <p>
-                               <strong class="primary-font">{{raw "<%"}}= event.User %></strong> left the room
+                              <p class =" text-danger">
+                               <small class="primary-font">{{raw "<%"}}= event.User %></small> joined the room
                               </p>
                             </li>
                           {{raw "<%"}} } %>
@@ -55,8 +52,8 @@
                             </li>
                           {{raw "<%"}} } %>
                           </script>
-            
-            <!-- <li class="right clearfix">
+
+              <!-- <li class="right clearfix">
               <span class="chat-img pull-right">
                 <img src="http://placehold.it/50/FA6F57/fff&text=ME" alt="User Avatar" class="img-circle" />
               </span>
@@ -102,19 +99,20 @@
               </div>
             </li> -->
           </ul>
-        </div>
-        <div class="panel-footer">
-          <div class="input-group">
-            <input id="message" autocomplete="off" autofocus type="text" class="form-control input-sm" placeholder="Type your message here..." />
-            <span class="input-group-btn">
-              <button class="btn btn-warning btn-sm" id="send">
-                Send</button>
-            </span>
+          </div>
+          <div class="panel-footer">
+            <div class="input-group">
+              <input id="message" autocomplete="off" autofocus type="text" class="form-control input-sm" placeholder="Type your message here..."
+              />
+              <span class="input-group-btn">
+                <button class="btn btn-warning btn-sm" id="send">
+                  Send</button>
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-      
-      
+
+
       </div>
 
       <!-- chat end div -->
@@ -129,10 +127,11 @@
 
   // Display a message
   var display = function (event) {
-    
+
     $('#thread').append(tmpl('message_tmpl', { event: event }));
-    // $('#thread').scrollTo('max')
-    //  $('#messages').append($('<li>').text(event.User));
+      // $('#thread').scrollTo('max')
+       $("#thread").scrollTop($("#thread").prop("scrollHeight"));
+      // $('#messages').append($('<li>').text(event.User));
   }
 
   // Message received on the socket
