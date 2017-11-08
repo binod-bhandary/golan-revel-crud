@@ -1,0 +1,156 @@
+{{set . "title" "Message"}} 
+{{template "header" .}}
+
+<div class="container-fluid">
+  <div class="row">
+    {{template "sidebar" .}}
+
+    <div class="col-sm-9">
+<div class="row">
+  <div class="alert alert-info">You are:
+    <strong id="whoami">{{ .username }}</strong>
+  </div>
+  <div class="col-lg-12 col-md-12 col-sm-10 col-xs-10 bhoechie-tab-container">   
+    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3 bhoechie-tab-menu">
+      <div class="list-group-item active text-center">Users</div>
+      <div class="list-group">
+           {{range .Users}}
+          <a href="#" class="list-group-item" id="{{.Username}}">
+           {{.Username}} <i class="glyphicon glyphicon-user"></i>
+          </a>
+          {{end}}
+      </div>
+    </div>
+    <div class="col-lg-9 col-md-9 col-sm-9 col-xs-9 bhoechie-tab">
+    
+      <!-- train section -->
+       {{range .Users}}
+      <div class="bhoechie-tab-content">  
+       
+        <div class="panel panel-info">
+          <div class="panel-heading"><center>
+            <h3 > Say Hello to {{.Username}}</h3>
+          </center></div>
+          <div class="panel-body">
+            <div class="tab-content">
+        
+            </div>
+            <ul class="list-group" id="chat-output">
+        
+            </ul>
+          </div>
+          <div class="panel-footer">
+            <form id="chat">
+              <div class="input-group">
+                <input type="text" class="form-control" id="chat-input" />
+                <span class="input-group-btn">
+                  <button type="submit" class="btn btn-default" id="send">Send Message</button>
+                </span>
+              </div>
+            </form>
+          </div>
+        </div>        
+      </div>
+      {{end}}
+      
+    </div>
+  </div>
+</div>
+      <!-- <div class="row">
+        <div class="col-md-4">
+          <div class="alert alert-info">You are: <strong id="whoami">{{ .username }}</strong>
+          </div>
+          <div class="panel panel-primary">
+            <div class="panel-heading">Online Users</div>
+            <ul class="nav nav-pills nav-stacked" id="myTabs" role="tablist">
+               {{range .Users}}
+                <li role="presentation" id="{{.Username}}">
+                  <a href="#id{{.ID}}" aria-controls="profile" role="tab" data-toggle="tab">
+                    <span class="glyphicon glyphicon-chevron-right"></span> {{.Username}} (active) </a>
+                </li>
+              {{end}}
+            </ul>
+            <div class="tab-content">
+                 {{range .Users}}
+                <div role="tabpanel" class="tab-pane" id="id{{.ID}}">Welcome, {{.Username}}</div>
+                {{end}}  
+            </div>
+          </div>
+        </div>
+        <div class="col-md-8">
+          <div class="panel panel-info">
+            <div class="panel-heading">Lobby Chat</div>
+            <div class="panel-body">
+              <div class="tab-content">
+                           
+              </div>
+              <ul class="list-group" id="chat-output">
+
+              </ul>
+            </div>
+            <div class="panel-footer">
+              <form id="chat">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="chat-input" />
+                  <span class="input-group-btn">
+                    <button type="submit" class="btn btn-default" id="send">Send Message</button>
+                  </span>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div> -->
+      <!-- chat end div -->
+    </div>
+    <!--/col-span-9-->
+  </div>
+ 
+</div>
+<script type="text/javascript">
+
+  $(document).ready(function () {
+    $("div.bhoechie-tab-menu>div.list-group>a").click(function (e) {
+      e.preventDefault();
+      $(this).siblings('a.active').removeClass("active");
+      $(this).addClass("active");
+      var index = $(this).index();
+      $("div.bhoechie-tab>div.bhoechie-tab-content").removeClass("active");
+      $("div.bhoechie-tab>div.bhoechie-tab-content").eq(index).addClass("active");
+    });
+  });
+
+  
+  // Create a socket
+  var socket = new WebSocket('ws://' + window.location.host + '/websocket/room/socketuser?user={{.username}}')
+  
+  socket.onopen = function (msg) {
+    console.log(msg);
+    socket.send('join');
+  };
+
+  // Display a message
+  var display = function (event) {    
+    switch (event.Type) {
+      case 'join':
+        console.log('join user'+event.User);
+         $('#'+ event.User).append($('<small>').text(' Active').addClass('text-success'));
+        break;
+
+      case 'leave':
+        console.log('USER_DISCONNECTED');
+        $('#' + event.User).append($('<small>').text(''));
+        break;
+
+    }
+  }
+
+  socket.onmessage = function (event) {
+
+    console.log(JSON.parse(event.data))
+    display(JSON.parse(event.data))    
+   
+  };
+
+
+</script>

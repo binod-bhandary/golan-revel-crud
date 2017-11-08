@@ -67,6 +67,31 @@ func AllUsers() ([]User, error) {
 	return bks, nil
 }
 
+func AllOtherUsers(username string) ([]User, error) {
+
+	/* select from users */
+	rows, err := app.DB.Query("SELECT * FROM users where username != $1", username)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	bks := make([]User, 0)
+	for rows.Next() {
+		bk := User{}
+		err := rows.Scan(&bk.ID, &bk.Fullname, &bk.Email, &bk.Username, &bk.Password) // order matters
+		if err != nil {
+			return nil, err
+		}
+		bks = append(bks, bk)
+	}
+	if err = rows.Err(); err != nil {
+		return nil, err
+	}
+	revel.INFO.Println("userList: ", bks)
+	return bks, nil
+}
+
 func GetUser(username string) (User, error) {
 
 	fmt.Println(username)

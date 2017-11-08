@@ -43,4 +43,7 @@ POST /updatepassword                 User.UpdatePassword
 # WebSocket demo
 GET     /chatroom                               Chatroomcon.Room
 WS      /websocket/room/socket                  Chatroomcon.RoomSocket
+# for one to one chat
+GET      /onlineuserlist                         Chatroomcon.OnlineUserList
+WS      /websocket/room/socketuser               Chatroomcon.RoomSocketUser
 

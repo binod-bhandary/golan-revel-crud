@@ -1,4 +1,5 @@
-{{set . "title" "Chat room"}} {{template "header" .}}
+{{set . "title" "Chat room"}} 
+{{template "header" .}}
 
 <div class="container-fluid">
   <div class="row">
@@ -35,7 +36,7 @@
                                 {{raw "<%"}}= event.Text %>
                               </p>
                             <small class="text-muted pull-right">
-                            <span class="glyphicon glyphicon-time "></span>13 mins ago
+                            <span class="glyphicon glyphicon-time "></span> {{raw "<%"}}= event.newTime %>
                           </small>
                           </div>
                             </li>
@@ -43,14 +44,14 @@
                           {{raw "<%"}} if(event.Type == 'join') { %>
                             <li class="message notice">
                               <p class="text-success">
-                               <small class="primary-font ">{{raw "<%"}}= event.User %></small> joined the room
+                               <strong class="primary-font ">{{raw "<%"}}= event.User %></strong> joined the room {{raw "<%"}}= event.newTime %>
                               </p>
                             </li>
                           {{raw "<%"}} } %>
                           {{raw "<%"}} if(event.Type == 'leave') { %>
                             <li class="message notice">
                               <p class =" text-danger">
-                               <small class="primary-font">{{raw "<%"}}= event.User %></small> joined the room
+                               <strong class="primary-font">{{raw "<%"}}= event.User %></strong> left the room {{raw "<%"}}= event.newTime %>
                               </p>
                             </li>
                           {{raw "<%"}} } %>
@@ -138,15 +139,24 @@
 
   // Display a message
   var display = function (event) {
-
+    var d = formatDate(event.Timestamp)
+    event['newTime'] = d;
     $('#thread').append(tmpl('message_tmpl', { event: event }));
     // $('#thread').scrollTo('max')
     $("#thread").scrollTop($("#thread").prop("scrollHeight"));
-    // $('#messages').append($('<li>').text(event.User));
+      // $('#messages').append($('<li>').text(event.User));
   }
+
+  /* get date format*/
+  function formatDate(d) {
+      d = new Date(d * 1000);
+      return d.getMonth() + 1 + '/' + d.getDate() + '/' + d.getFullYear() + " " + d.getHours() + ":" + d.getMinutes() + ":" + d.getSeconds();
+
+    }
 
   // Message received on the socket
   socket.onmessage = function (event) {
+    
     console.log(JSON.parse(event.data))
     display(JSON.parse(event.data))
 
